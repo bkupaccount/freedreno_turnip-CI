@@ -11,6 +11,8 @@ on:
 jobs:
   start_building_turnip:
     runs-on: ubuntu-24.04
+    env:
+      BUILD_VERSION: ${{ inputs.version }}
     steps:
     - uses: actions/checkout@v3
 
