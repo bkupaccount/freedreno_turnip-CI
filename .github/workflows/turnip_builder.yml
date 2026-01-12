@@ -29,7 +29,19 @@ jobs:
     - name: Release "turnip"
       uses: softprops/action-gh-release@v1
       with:
-        body: Turnip Vulkan driver library Release V${{ inputs.version }}
+        body: |
+          Turnip Vulkan driver library Release V11
+
+          Files:
+          * gen8-hacks - main branch (upstream MR + hacks applied)
+          * gen8-yuck - branch with some commits reverted to gain back perf in RDR2. Probably useless at this point
+
+          Settings:
+          * Disable DXVK_HUD
+          * Enable swapchain blit path to workaround corrupted image on Android: `WRAPPER_BLIT=1`
+          * **Activate sysmem on A830 - everything will hang/crash/etc without**: `TU_DEBUG=sysmem`. Not required on A840/A825
+          * If too unstable - activate nolrz: `TU_DEBUG=nolrz` or `TU_DEBUG=sysmem,nolrz` if A830.
+
         tag_name: tu_v${{ inputs.version }}
         name: Turnip A8XX v${{ inputs.version }}
         files: |
