@@ -11,7 +11,6 @@ ndkver="android-ndk-r29"
 ndk="$workdir/$ndkver/toolchains/llvm/prebuilt/linux-x86_64/bin"
 sdkver="34"
 mesasrc="https://github.com/whitebelyash/mesa-tu8"
-mesabranch="gen8-hacks"
 srcfolder="mesa"
 
 clear
@@ -21,7 +20,8 @@ clear
 run_all(){
 	check_deps
 	prepare_workdir
-	build_lib_for_android
+	build_lib_for_android gen8-hacks
+	build_lib_for_android gen8-yuck
 }
 
 check_deps(){
@@ -55,12 +55,14 @@ prepare_workdir(){
 		unzip "$ndkver"-linux.zip &> /dev/null
 
 	echo "Downloading mesa source ..." $'\n'
-		git clone $mesasrc --depth=1 -b $mesabranch $srcfolder
+		git clone $mesasrc --depth=1 $srcfolder
 		cd $srcfolder
 }
 
 
 build_lib_for_android(){
+	echo "==== Building Mesa on $1 branch ===="
+	git pull origin $1 --depth=1
 	#Workaround for using Clang as c compiler instead of GCC
 	mkdir -p "$workdir/bin"
 	ln -sf "$ndk/clang" "$workdir/bin/cc"
@@ -110,7 +112,7 @@ EOF
 		meson setup build-android-aarch64 \
 			--cross-file "android-aarch64.txt" \
 			--native-file "native.txt" \
-			--prefix /tmp/turnip \
+			--prefix /tmp/turnip-$1 \
 			-Dbuildtype=release \
 			-Db_lto=true \
    			-Db_lto_mode=thin \
@@ -123,14 +125,36 @@ EOF
 			-Dvulkan-drivers=freedreno \
 			-Dvulkan-beta=true \
 			-Dfreedreno-kmds=kgsl \
-			-Degl=disabled &> "$workdir/meson_log"
+			-Degl=disabled \
+			--reconfigure
 
 	echo "Compiling build files ..." $'\n'
-		ninja -C build-android-aarch64 install &> "$workdir/ninja_log"
+		ninja -C build-android-aarch64 install
 
-	if ! [ -a /tmp/turnip/lib/libvulkan_freedreno.so ]; then
+	if ! [ -a /tmp/turnip-$1/lib/libvulkan_freedreno.so ]; then
 		echo -e "$red Build failed! $nocolor" && exit 1
 	fi
+	echo "Making the archive"
+	cd /tmp/turnip-$1/lib
+	cat <<EOF >"meta.json"
+{
+  "schemaVersion": 1,
+  "name": "A8XX Draft CI",
+  "description": "A8xx support MR with A830/A825/A810/A829/UBWC-on-KGSL hacks. Built from $1 branch",
+  "author": "KIMCHI, whitebelyash",
+  "packageVersion": "1",
+  "vendor": "Mesa",
+  "driverVersion": "Vulkan 1.4.335",
+  "minApi": 28,
+  "libraryName": "libvulkan_freedreno.so"
+}
+EOF
+zip a8xx-$1.zip libvulkan_freedreno.so meta.json
+mv a8xx-$1.zip /tmp/
+cd -
+if ! [ -a /tmp/a8xx-$1.zip ]; then
+	echo -e "$red Failed to pack the archive! $nocolor"
+fi
 }
 
 run_all
