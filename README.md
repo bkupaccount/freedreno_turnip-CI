@@ -1,4 +1,12 @@
-This is a bash script to build freedreno/turnip for android as a magisk module and an Adreno Tools driver package.
+# Freedreno/Turnip CI
+
+This repository holds scripts and workflow to autobuild new Turnip driver releases adapted for AdrenoTools usage.  
+These builds are based on https://github.com/whitebelyash/mesa-tu8 repository (gen8 branch) to properly or improperly support some Adreno 8XX GPUs till the support reaches upstream.
+
+
+Old README:
+<details>
+  This is a bash script to build freedreno/turnip for android as a magisk module and an Adreno Tools driver package.
 
 ### Scheduled Releases
 - Automated releases at 06:00 UTC on the 1st and 15th of each month.
@@ -24,3 +32,5 @@ This is a bash script to build freedreno/turnip for android as a magisk module a
 - https://gitlab.freedesktop.org/mesa/mesa/-/issues/6802
 
 - https://github.com/bylaws/libadrenotools
+
+</details>
