@@ -59,8 +59,8 @@ prepare_workdir(){
 		git clone $mesasrc --depth=1 -b 26.0 $srcfolder
 		cd $srcfolder
   echo "Applying patches..."
-    wget https://github.com/whitebelyash/mesa-tu8/releases/download/patchset-head/tu_gen8_kgsl_android.patch -o kgsl.patch
-    git apply kgsl.patch
+    wget https://github.com/whitebelyash/mesa-tu8/releases/download/patchset-head/tu_gen8_kgsl_android.patch
+    git apply tu_gen8_kgsl_android.patch
 #	echo "Pushing TU_VERSION..."
 #		echo "#define TUGEN8_DRV_VERSION \"v$BUILD_VERSION\"" > ./src/freedreno/vulkan/tu_version.h
 }
