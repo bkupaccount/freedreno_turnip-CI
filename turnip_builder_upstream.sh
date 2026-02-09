@@ -58,9 +58,6 @@ prepare_workdir(){
 	echo "Downloading mesa source ..." $'\n'
 		git clone $mesasrc --depth=1 -b 26.0 $srcfolder
 		cd $srcfolder
-  echo "Applying patches..."
-    wget https://github.com/whitebelyash/mesa-tu8/releases/download/patchset-head/tu_gen8_kgsl_android.patch
-    git apply tu_gen8_kgsl_android.patch
 #	echo "Pushing TU_VERSION..."
 #		echo "#define TUGEN8_DRV_VERSION \"v$BUILD_VERSION\"" > ./src/freedreno/vulkan/tu_version.h
 }
@@ -68,8 +65,12 @@ prepare_workdir(){
 
 build_lib_for_android(){
 	echo "==== Building Mesa on $1 branch ===="
-	echo "Applying patches..."
+	echo "Applying patches... ($2)"
     	wget https://github.com/whitebelyash/mesa-tu8/releases/download/patchset-head/$2
+		if ! git apply --check $2; then
+			echo "Failed to apply $2!"
+			exit 1
+		fi
     	git apply $2
 	#git checkout origin/$1
 	#Workaround for using Clang as c compiler instead of GCC
