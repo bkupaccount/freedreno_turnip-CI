@@ -30,18 +30,18 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         body: |
-          Mesa-git Turnip V${{ inputs.version }}  
+          Mesa Turnip V${{ inputs.version }}  
           Built from: https://gitlab.freedesktop.org/mesa/mesa
           
           >[!WARNING]
-          > GPUs other than A840 may work unstable!
+          > GPUs other than A830/A840 may work unstable!
 
           This is a build of current upstream Mesa with my GPU enablement hacks applied
           
 
         tag_name: mesa_v${{ inputs.version }}
-        name: Mesa-git Turnip v${{ inputs.version }}
+        name: Mesa Turnip v${{ inputs.version }}
         files: |
-           /tmp/mesa-turnip-main-V${{ inputs.version }}.zip
            /tmp/mesa-turnip-flushall-V${{ inputs.version }}.zip
+           /tmp/mesa-turnip-noflushall-V${{ inputs.version }}.zip
 
