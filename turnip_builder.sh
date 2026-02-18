@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+set -euo pipefail
 
 #Define variables
 green='\033[0;32m'
@@ -26,6 +27,7 @@ run_all(){
 }
 
 check_deps(){
+	deps_missing=0
 	echo "Checking system for required Dependencies ..."
 		for deps_chk in $deps;
 			do
@@ -65,7 +67,7 @@ prepare_workdir(){
 
 build_lib_for_android(){
 	echo "==== Building Mesa on $1 branch ===="
-	git checkout origin/$1
+	git checkout -B "$1" "origin/$1"
 	#Workaround for using Clang as c compiler instead of GCC
 	mkdir -p "$workdir/bin"
 	ln -sf "$ndk/clang" "$workdir/bin/cc"
@@ -117,8 +119,7 @@ EOF
 			--native-file "native.txt" \
 			--prefix /tmp/turnip-$1 \
 			-Dbuildtype=release \
-			-Db_lto=true \
-   			-Db_lto_mode=thin \
+			-Db_lto=false \
 			-Dstrip=true \
 			-Dplatforms=android \
 			-Dvideo-codecs= \

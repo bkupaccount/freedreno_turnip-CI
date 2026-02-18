@@ -24,7 +24,7 @@ jobs:
           sudo apt install -y build-essential flex bison glslang-tools meson-1.5
 
       - name: Build Turnip package
-        run: bash ./turnip_builder.sh
+        run: bash -euo pipefail ./turnip_builder.sh
 
       - name: Validate generated package
         run: |
