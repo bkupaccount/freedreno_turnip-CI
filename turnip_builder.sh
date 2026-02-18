@@ -14,7 +14,9 @@ sdkver="34"
 mesasrc="https://github.com/bkupaccount/mesa-tu8"
 srcfolder="mesa"
 
-clear
+if [ -t 1 ] && [ -n "${TERM:-}" ] && command -v clear >/dev/null 2>&1; then
+	clear
+fi
 
 #There are 4 functions here, simply comment to disable.
 #You can insert your own function and make a pull request.
