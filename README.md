@@ -34,3 +34,9 @@ Old README:
 - https://github.com/bylaws/libadrenotools
 
 </details>
+
+
+## CI workflow scope
+
+- CI is intentionally streamlined to one workflow dedicated to Adreno 825 builds.
+- Workflow path: `.github/workflows/turnip_builder.yml`.

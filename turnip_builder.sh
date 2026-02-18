@@ -144,8 +144,8 @@ EOF
 	cat <<EOF >"meta.json"
 {
   "schemaVersion": 1,
-  "name": "A8XX MR v$BUILD_VERSION",
-  "description": "A8xx support MR with A830/A825/A810/A829/UBWC-on-KGSL hacks. Built from $1 branch",
+  "name": "Adreno 825 Turnip v$BUILD_VERSION",
+  "description": "Adreno 825-focused build from $1 branch (mesa-tu8).",
   "author": "whitebelyash",
   "packageVersion": "1",
   "vendor": "Mesa",
