@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+set -euo pipefail
 
 #Define variables
 green='\033[0;32m'
@@ -10,10 +11,12 @@ magiskdir="$workdir/turnip_module"
 ndkver="android-ndk-r29"
 ndk="$workdir/$ndkver/toolchains/llvm/prebuilt/linux-x86_64/bin"
 sdkver="34"
-mesasrc="https://github.com/whitebelyash/mesa-tu8"
+mesasrc="https://github.com/bkupaccount/mesa-tu8"
 srcfolder="mesa"
 
-clear
+if [ -t 1 ] && [ -n "${TERM:-}" ] && command -v clear >/dev/null 2>&1; then
+	clear
+fi
 
 #There are 4 functions here, simply comment to disable.
 #You can insert your own function and make a pull request.
@@ -26,6 +29,7 @@ run_all(){
 }
 
 check_deps(){
+	deps_missing=0
 	echo "Checking system for required Dependencies ..."
 		for deps_chk in $deps;
 			do
@@ -65,7 +69,7 @@ prepare_workdir(){
 
 build_lib_for_android(){
 	echo "==== Building Mesa on $1 branch ===="
-	git checkout origin/$1
+	git checkout -B "$1" "origin/$1"
 	#Workaround for using Clang as c compiler instead of GCC
 	mkdir -p "$workdir/bin"
 	ln -sf "$ndk/clang" "$workdir/bin/cc"
@@ -117,8 +121,7 @@ EOF
 			--native-file "native.txt" \
 			--prefix /tmp/turnip-$1 \
 			-Dbuildtype=release \
-			-Db_lto=true \
-   			-Db_lto_mode=thin \
+			-Db_lto=false \
 			-Dstrip=true \
 			-Dplatforms=android \
 			-Dvideo-codecs= \
@@ -144,8 +147,8 @@ EOF
 	cat <<EOF >"meta.json"
 {
   "schemaVersion": 1,
-  "name": "A8XX MR v$BUILD_VERSION",
-  "description": "A8xx support MR with A830/A825/A810/A829/UBWC-on-KGSL hacks. Built from $1 branch",
+  "name": "Adreno 825 Turnip v$BUILD_VERSION",
+  "description": "Adreno 825-focused build from $1 branch (mesa-tu8).",
   "author": "whitebelyash",
   "packageVersion": "1",
   "vendor": "Mesa",
